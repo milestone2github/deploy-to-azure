@@ -5,6 +5,7 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  console.log('frontend env: ', import.meta.env.VITE_APP_BACKEND_URL)//debug
 
   return (
     <>
