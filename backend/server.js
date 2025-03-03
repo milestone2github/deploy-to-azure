@@ -7,7 +7,8 @@ const app = express();
 // Example API endpoint
 console.log('env-var: ', process.env.FRONTEND_ORIGIN);
 app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello from the backend!" });
+  let message = "Hello from the backend!" + process.env.FRONTEND_ORIGIN;
+  res.json({ message });
 });
 
 // serve frontend build from here 
