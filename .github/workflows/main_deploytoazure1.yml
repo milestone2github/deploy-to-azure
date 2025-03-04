@@ -13,17 +13,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read # This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
+
+      # Log in to Azure so that we can retrieve Key Vault secrets
+      - name: Login to Azure for Key Vault
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4183B13DB97145F99E06745FC8237563 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7FADB8C254B742C6A24857C15163815F }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_15D539FFE9254E07ABB18A6CF759EAB1 }}
+
+      # Retrieve the VITE_APP_BACKEND_URL secret from Azure Key Vault
+      - name: Get secrets from Azure Key Vault
+        id: keyvault
+        uses: azure/get-keyvault-secrets@v1
+        with:
+          keyvault: 'keytest-milestone'
+          secrets: 'VITE_APP_BACKEND_URL'
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
+      # Use the secret as an environment variable during build so Vite picks it up
       - name: npm install, build, and test
+        env:
+          VITE_APP_BACKEND_URL: ${{ steps.keyvault.outputs.VITE_APP_BACKEND_URL }}
         run: |
           npm install
           npm run build --if-present
@@ -45,8 +64,8 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
@@ -71,4 +90,3 @@ jobs:
           app-name: 'deploytoazure1'
           slot-name: 'Production'
           package: .
-          
