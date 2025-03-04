@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # This is required for actions/checkout
-      id-token: write # Added to provide the ACTIONS_ID_TOKEN_REQUEST_URL env variable
+      # id-token: write # Added to provide the ACTIONS_ID_TOKEN_REQUEST_URL env variable
 
     steps:
       - uses: actions/checkout@v4
