@@ -13,8 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read # This is required for actions/checkout
-      id-token: write  # Added to provide the ACTIONS_ID_TOKEN_REQUEST_URL env variable
+      contents: read  # This is required for actions/checkout
+      id-token: write # Added to provide the ACTIONS_ID_TOKEN_REQUEST_URL env variable
 
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Login to Azure for Key Vault
         uses: azure/login@v2
         with:
-          auth-type: spn  # explicitly use service principal authentication
+          auth-type: SERVICE_PRINCIPAL
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4183B13DB97145F99E06745FC8237563 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7FADB8C254B742C6A24857C15163815F }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_15D539FFE9254E07ABB18A6CF759EAB1 }}
@@ -66,8 +66,8 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
+      id-token: write  # This is required for requesting the JWT
+      contents: read   # This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
@@ -81,7 +81,7 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          auth-type: spn
+          auth-type: SERVICE_PRINCIPAL
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4183B13DB97145F99E06745FC8237563 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7FADB8C254B742C6A24857C15163815F }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_15D539FFE9254E07ABB18A6CF759EAB1 }}
