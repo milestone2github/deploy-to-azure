@@ -25,7 +25,7 @@ jobs:
       # Use the secret as an environment variable during build so Vite picks it up
       - name: npm install, build, and test
         env:
-          VITE_APP_BACKEND_URL: ${{ secrets.VITE_APP_BACKEND_URL }}
+          VITE_APP_BACKEND_URL: ${{ vars.VITE_APP_BACKEND_URL }}
         run: |
           npm install
           npm run build --if-present
