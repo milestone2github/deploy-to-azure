@@ -1,34 +1,38 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import axios from 'axios'
 import './App.css'
+import Login from './pages/Login'
 
 function App() {
-  const [count, setCount] = useState(0)
-  console.log('frontend env: ', import.meta.env.VITE_APP_BACKEND_URL)//debug
+  const [response, setResponse] = useState(null);
+
+  console.log('frontend env: ', import.meta.env.VITE_APP_BACKEND_URL); //debug
+
+
+  const testHelloAPI = async () => {
+    try {
+      console.log("Inside Test Hello API");
+      
+      const res = await axios.get( `${import.meta.env.VITE_APP_BACKEND_URL}/api/hello`,
+        { withCredentials: true } // required to include session cookies as it allows sending cookies for session
+      );
+      
+      console.log("API Response:", res.data);
+      setResponse(res.data.message);
+    } catch (error) {
+      console.error("Error calling /api/hello:", error);
+    }
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <Login />
+      
+      {/*  Test button */}
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <button onClick={testHelloAPI}>Test /hello</button>
+        {response && <p>{response}</p>}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
