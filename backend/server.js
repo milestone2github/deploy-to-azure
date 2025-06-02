@@ -9,6 +9,8 @@ const app = express();
 const MongoStore = require("connect-mongo");
 const transactionDbConnection = connetToTransactionsDb();
 
+// Tell Express it’s behind a trusted proxy (Azure’s TLS terminator)
+app.set('trust proxy', 1);
 
 // Configure session middleware
 app.use(
